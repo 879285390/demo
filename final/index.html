@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        button,input{
+            font-family:Microsoft YaHei,Heiti SC,tahoma,arial,Hiragino Sans GB,"\5B8B\4F53",sans-serif;
+            border:0;
+            outline:none;
+        }
+        /* pc width > 1100px */
+        html{ font-size: 100%;}
+        body {
+            font-size: 1.5rem;
+        }
+        /* ipad pro */
+        @media screen and (max-width: 1024px) {
+            body {
+            font-size: 1.4rem;
+            }
+        }
+        /* ipad */
+        @media screen and (max-width: 768px) {
+            body {
+            font-size: 1.3rem;
+            }
+        }
+        /* iphone6 7 8 plus */
+        @media screen and (max-width: 414px) {
+            body {
+            font-size: 1.25rem;
+            }
+        }
+        /* iphoneX */
+        @media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 3) {
+            body {
+            font-size: 1.125rem;
+            }
+        }
+        /* iphone6 7 8 */
+        @media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 2) {
+            body {
+            font-size: 1rem;
+            }
+        }
+        /* iphone5 */
+        @media screen and (max-width: 320px) {
+            body {
+            font-size: 0.75rem;
+            }
+        }
+        header {
+            position: absolute;
+            width: 100%;
+            height: 2rem;
+            top: 1rem;
+            text-align: center;
+        }
+        .w {
+            width:80%;
+            margin:0 auto;
+        }
+        form {
+            margin-top:3rem;
+        }
+        .text {
+            left:50%;
+            width:100%;
+            height:2rem;
+            margin:0.5rem 0;
+            border:1px solid;
+            border-color: #333;
+            border-radius: 1rem;
+        }
+        .text:hover {
+            box-shadow: 0 0 3px 3px #ccc;
+        }
+        #submit {
+            background-color: #444; 
+            color: white;
+            padding: 1rem 2rem;
+            margin:1rem 45%;
+            text-align: center;
+            border-radius: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .status {
+            font-size:2rem;
+            width:80%;
+            margin:2rem auto;
+            text-align: center;
+        }
+        footer{
+            height:1.2rem;
+            padding-top:30px;
+        }        
+        .copyroght{
+            font-size:0.3rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            欢迎使用
+        </div>
+    </header>
+    <main class="w">
+        <form name = "register_form" action="" method="post">
+
+            <label>ssid</label><br>
+            <div class="input">
+                <input class="text" type="text" name="ssid" maxlength="20" id="ssid">
+            </div>
+            <label>pwd</label><br>
+            <div class="input"><input class="text" type="text" name="pwd" maxlength="20" id="pwd"></div>
+            <label>aeskey</label><br>
+            <div class="input"><input class="text" type="text" name="aeskey" maxlength="20"size="20"id="aeskey"></div>
+            <label>product_key</label><br>
+            <div class="input"><input class="text" type="text" name="product_key" maxlength="20"size="20"id="product_key"></div>
+            <label>device_secret</label><br>
+            <div class="input"><input class="text" name="device_secret" type="text" id="device_secret" size="50"></div>
+            <label>device_name</label><br>
+            <div class="input"><input class="text" name="device_name" type="text" id="device_name" size="50"></div>
+    
+            <input id="submit" name = "submit" type = "button"   value = "保存" onclick = check()>
+    </form>
+
+    <div class="status" id="status"></div>
+    </main>
+    <footer >
+        <div class="w copyroght">copyright 2021 Lyq | Czy</div>
+    </footer>
+    <script>
+        const ws = new WebSocket('ws://127.0.0.1:8088');
+        let status = document.querySelector('#status')
+        function check() {
+            let userInfo = {}
+            var ssid = document.getElementById("ssid").value;
+            var pwd = document.getElementById("pwd").value;
+            var aeskey = document.getElementById("aeskey").value;
+            var product_key = document.getElementById("product_key").value;
+            var device_secret = document.getElementById("device_secret").value;
+            var device_name = document.getElementById("device_name").value
+
+            userInfo.ssid = ssid;
+            userInfo.pwd = pwd;
+            userInfo.aeskey = aeskey;
+            userInfo.product_key = product_key;
+            userInfo.device_secret = device_secret;
+            userInfo.device_name = device_name;
+
+            if (ws.readyState===1) {
+                ws.send(JSON.stringify(userInfo))
+            }
+            else {
+                alert("连接失败")
+            }
+            return
+        }   
+
+        ws.onmessage = function(res) {
+            res = JSON.parse(res.data);
+            if (res.status_code == 0) {
+                status.innerHTML = res.msg
+            } 
+            else if (res.status_code == -1) {
+                status.innerHTML = res.msg
+            }
+            else {
+                alert("无法识别")
+            }
+        }
+    </script>
+</body>
+</html>

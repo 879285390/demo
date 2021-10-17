@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        
+    footer {
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    bottom: 0;
+    text-align: center;
+    }
+
+    </style>
+</head>
+<body>
+
+    <form class="form-horizontal" name = "register_form" action="" method="post" entype='application/json' id="register_form">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">ssid</label>
+          <div class="col-sm-10">
+            <input type="ssid" class="form-control" id="ssid">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">pwd</label>
+          <div class="col-sm-10">
+            <input type="pwd" class="form-control" id="pwd">
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">aeskey</label>
+            <div class="col-sm-10">
+              <input type="aeskey" class="form-control" id="aeskey">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">product_key</label>
+            <div class="col-sm-10">
+              <input type="product_key" class="form-control" id="product_key">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">device_secret</label>
+            <div class="col-sm-10">
+              <input type="device_secret" class="form-control" id="device_secret">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">device_name</label>
+            <div class="col-sm-10">
+              <input type="device_name" class="form-control" id="device_name">
+            </div>
+          </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input name = "Submit" type = "button" class="btn btn-default"  value = "提交" onclick = check()>
+            <!-- <button type="submit" class="btn btn-default">Sign in</button> -->
+          </div>
+        </div>
+      </form>
+
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong id="status"></strong> 
+      </div>
+    
+      <footer>
+          copyright 2021 Lyq | Czy
+      </footer>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <script>
+        var userInfo = {}
+        var ws = new WebSocket('ws://localhost:8088')
+        function check() {
+        userInfo.ssid = $("#ssid").val();
+        userInfo.pwd = $("#pwd").val();
+        userInfo.aeskey = $("#aeskey").val();
+        userInfo.product_key = $("#product_key").val();
+        userInfo.device_secret = $("#device_secret").val();
+        userInfo.device_name = $("#device_name").val();
+        var msg = JSON.stringify({
+            userInfo
+        });
+        console.log(msg)
+        ws.send(msg);
+        }
+        ws.onmessage = function(res) {
+            if (res.status_code == 0) {
+                $("#status").innerHTML = res.msg
+            } 
+            else if (res.status_code == -1) {
+                $("#status").innerHTML = res.msg
+            }
+            else {
+                console.log("无法识别")
+            }
+        }
+    </script>
+</body>
+</html>
