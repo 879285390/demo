@@ -1,1 +1,2 @@
-一个普普通通使用了websocket的小demo
+一个平平无奇的加入了websocket的demo，使用了bootstarp和jquery
+
