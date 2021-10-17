@@ -1,2 +1,4 @@
-一个平平无奇的加入了websocket的demo，使用了bootstarp和jquery
+# demo
+一个什么奇怪的文件传输项目
 
+虽然没花什么时间，但是是第一次做的前端demo，特地记录一下，也当作是熟悉github了
